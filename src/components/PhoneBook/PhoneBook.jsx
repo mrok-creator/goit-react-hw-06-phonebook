@@ -43,7 +43,7 @@ function PhoneBook() {
     id => {
       return dispatch(actionCreators.deleteContact(id));
     },
-    [contacts, dispatch]
+    [dispatch]
   );
 
   const getFilteredContacts = () => {
