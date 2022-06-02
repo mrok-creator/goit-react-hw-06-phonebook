@@ -29,7 +29,7 @@ function PhoneBook() {
 
       return dispatch(actionCreators.addContact(data));
     },
-    [contacts]
+    [contacts, dispatch]
   );
 
   const changeFilter = useCallback(
@@ -43,7 +43,7 @@ function PhoneBook() {
     id => {
       return dispatch(actionCreators.deleteContact(id));
     },
-    [contacts]
+    [contacts, dispatch]
   );
 
   const getFilteredContacts = () => {
