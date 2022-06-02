@@ -1,40 +1,21 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { nanoid } from 'nanoid';
+import { useState, useCallback } from 'react';
+import { useSelector, shallowEqual, useDispatch } from 'react-redux';
 
 import ContactForm from './ContactForm';
 import Filter from './Filter';
 import ContactList from './ContactList';
 
+import { getContacts } from 'redux/Contacts/contactsSelectors';
+import actionCreators from 'redux/Contacts/contactsActionCreators';
+
 import s from './phoneBook.module.css';
 
 function PhoneBook() {
-  const [contacts, setContacts] = useState([
-    { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-    { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-    { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-    { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-  ]);
+  const contacts = useSelector(getContacts, shallowEqual);
+
+  const dispatch = useDispatch();
 
   const [filter, setFilter] = useState('');
-
-  const firstRender = useRef(true);
-
-  useEffect(() => {
-    if (!firstRender.current) {
-      localStorage.setItem('contacts', JSON.stringify(contacts));
-    }
-  }, [contacts]);
-
-  useEffect(() => {
-    if (firstRender.current) {
-      const data = localStorage.getItem('contacts');
-      const res = JSON.parse(data);
-      if (res?.length) {
-        setContacts(res);
-      }
-      firstRender.current = false;
-    }
-  }, []);
 
   const addContacts = useCallback(
     data => {
@@ -45,17 +26,10 @@ function PhoneBook() {
       }
 
       //? add new  contact logic
-      setContacts(prevContacts => {
-        const { name, number } = data;
-        const newContacts = {
-          id: nanoid(),
-          name,
-          number,
-        };
-        return [...prevContacts, newContacts];
-      });
+
+      return dispatch(actionCreators.addContact(data));
     },
-    [setContacts, contacts]
+    [contacts]
   );
 
   const changeFilter = useCallback(
@@ -67,10 +41,9 @@ function PhoneBook() {
 
   const deleteContacts = useCallback(
     id => {
-      const res = contacts.filter(item => item.id !== id);
-      setContacts(res);
+      return dispatch(actionCreators.deleteContact(id));
     },
-    [contacts, setContacts]
+    [contacts]
   );
 
   const getFilteredContacts = () => {
