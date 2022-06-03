@@ -5,8 +5,8 @@ import ContactForm from './ContactForm';
 import Filter from './Filter';
 import ContactList from './ContactList';
 
-import { getContacts } from 'redux/Contacts/contactsSelectors';
-import actionCreators from 'redux/Contacts/contactsActionCreators';
+import { getContacts } from 'redux/Contacts/contacts-selectors';
+import { actions } from 'redux/Contacts/contacts-slice';
 
 import s from './phoneBook.module.css';
 
@@ -27,7 +27,7 @@ function PhoneBook() {
 
       //? add new  contact logic
 
-      return dispatch(actionCreators.addContact(data));
+      return dispatch(actions.add(data));
     },
     [contacts, dispatch]
   );
@@ -41,7 +41,7 @@ function PhoneBook() {
 
   const deleteContacts = useCallback(
     id => {
-      return dispatch(actionCreators.deleteContact(id));
+      return dispatch(actions.remove(id));
     },
     [dispatch]
   );
